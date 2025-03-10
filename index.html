@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Country Flag Finder</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Country Flag Finder</h1>
+        
+        <div class="search-tabs">
+            <button class="tab-btn active" data-tab="ai">Search by Description (AI)</button>
+            <button class="tab-btn" data-tab="direct">Search by Country Name</button>
+        </div>
+
+        <div class="search-container" id="aiSearch">
+            <input type="text" id="flagDescription" placeholder="Describe a flag (e.g., 'red with yellow stars')" />
+            <button id="searchButton">Search</button>
+        </div>
+
+        <div class="search-container hidden" id="directSearch">
+            <input type="text" id="countryName" placeholder="Enter country name (e.g., 'France', 'Japan')" />
+        </div>
+
+        <div id="results" class="results-grid"></div>
+
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Searching flags...</p>
+        </div>
+    </div>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
