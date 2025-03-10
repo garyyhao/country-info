@@ -10,6 +10,22 @@
     <div class="container">
         <h1>Country Flag Finder</h1>
         
+        <div class="settings-bar">
+            <button id="settingsButton" class="settings-button">⚙️ Settings</button>
+        </div>
+
+        <div id="settingsModal" class="modal hidden">
+            <div class="modal-content">
+                <h2>Settings</h2>
+                <div class="settings-form">
+                    <label for="apiKey">OpenAI API Key:</label>
+                    <input type="password" id="apiKey" placeholder="sk-..." />
+                    <p class="help-text">Get your API key from <a href="https://platform.openai.com/api-keys" target="_blank">OpenAI</a></p>
+                    <button id="saveSettings">Save</button>
+                </div>
+            </div>
+        </div>
+        
         <div class="search-tabs">
             <button class="tab-btn active" data-tab="ai">Search by Description (AI)</button>
             <button class="tab-btn" data-tab="direct">Search by Country Name</button>

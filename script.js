@@ -7,13 +7,19 @@ const loadingDiv = document.getElementById('loading');
 const aiSearch = document.getElementById('aiSearch');
 const directSearch = document.getElementById('directSearch');
 const tabButtons = document.querySelectorAll('.tab-btn');
+const settingsButton = document.getElementById('settingsButton');
+const settingsModal = document.getElementById('settingsModal');
+const apiKeyInput = document.getElementById('apiKey');
+const saveSettingsButton = document.getElementById('saveSettings');
 
 // Constants
 const COUNTRIES_API = 'https://restcountries.com/v3.1';
 const OPENAI_API = 'https://api.openai.com/v1/chat/completions';
+const STORAGE_KEY = 'countryFinderApiKey';
 
 // State
 let allCountries = [];
+let apiKey = localStorage.getItem(STORAGE_KEY) || '';
 
 // Initialize
 async function init() {
@@ -23,6 +29,7 @@ async function init() {
         allCountries = await response.json();
         setupTabListeners();
         setupDirectSearch();
+        setupSettingsListeners();
         // Show all countries initially
         displayResults(allCountries.sort((a, b) => a.name.common.localeCompare(b.name.common)));
     } catch (error) {
@@ -30,6 +37,26 @@ async function init() {
     } finally {
         showLoading(false);
     }
+}
+
+// Settings Functionality
+function setupSettingsListeners() {
+    settingsButton.addEventListener('click', () => {
+        apiKeyInput.value = apiKey;
+        settingsModal.classList.remove('hidden');
+    });
+
+    settingsModal.addEventListener('click', (e) => {
+        if (e.target === settingsModal) {
+            settingsModal.classList.add('hidden');
+        }
+    });
+
+    saveSettingsButton.addEventListener('click', () => {
+        apiKey = apiKeyInput.value.trim();
+        localStorage.setItem(STORAGE_KEY, apiKey);
+        settingsModal.classList.add('hidden');
+    });
 }
 
 // Tab Functionality
@@ -97,6 +124,12 @@ async function handleSearch() {
         return;
     }
 
+    if (!apiKey) {
+        showError('Please add your OpenAI API key in settings first');
+        settingsModal.classList.remove('hidden');
+        return;
+    }
+
     showLoading(true);
     clearResults();
 
@@ -104,7 +137,7 @@ async function handleSearch() {
         const matchingCountries = await findMatchingFlags(description);
         displayResults(matchingCountries);
     } catch (error) {
-        showError('Error searching flags. Please try again.');
+        showError('Error searching flags. Please check your API key and try again.');
     } finally {
         showLoading(false);
     }
@@ -118,7 +151,7 @@ async function findMatchingFlags(description) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${config.OPENAI_API_KEY}`
+            'Authorization': `Bearer ${apiKey}`
         },
         body: JSON.stringify({
             model: "gpt-3.5-turbo",
